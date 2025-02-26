@@ -1,5 +1,8 @@
 #!/bin/sh
-# Activa el entorno virtual
-/zenohvenv/bin/activate
-# Ejecuta el script; usamos exec para reemplazar el proceso shell
+# Para depurar, imprimamos algunas variables
+echo "PATH before activation: $PATH"
+echo "Activating virtualenv..."
+. /zenohvenv/bin/activate
+echo "PATH after activation: $PATH"
+echo "Launching acelerometro.py..."
 exec python /distrimuse/acelerometro.py
