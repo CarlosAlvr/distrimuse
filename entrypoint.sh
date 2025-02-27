@@ -1,5 +1,6 @@
 #!/bin/sh
-# Para depurar, imprimamos algunas variables
+echo "Waiting 1 second before activation..."
+sleep 1
 echo "PATH before activation: $PATH"
 echo "Activating virtualenv..."
 . /zenohvenv/bin/activate
