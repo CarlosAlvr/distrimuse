@@ -62,7 +62,7 @@ def main(conf: zenoh.Config, key: str):
 
         #print(f"Declaring Subscriber on '{key}'...")
         #print("Declaring Publisher on 'casa/habitacion1/deteccion'...")
-        pub = session.declare_publisher("casa/**/deteccion")
+        pub = session.declare_publisher("casa/habitacion1/deteccion")
 
         def listener(sample: zenoh.Sample):
             #print(f">> [Subscriber] Received data on '{sample.key_expr}'")
@@ -91,13 +91,13 @@ if __name__ == "__main__":
     import argparse
     import common
 
-    parser = argparse.ArgumentParser(prog="z_sub_detect_publish", description="Detect people in frames and publish detection status.")
+    parser = argparse.ArgumentParser(prog="Recognice_fall", description="Detect people in frames and publish detection status.")
     common.add_config_arguments(parser)
     parser.add_argument(
         "--key",
         "-k",
         dest="key",
-        default="casa/**/video",
+        default="casa/habitacion1/video",
         type=str,
         help="The key expression to subscribe to.",
     )
