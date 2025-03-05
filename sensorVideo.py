@@ -16,7 +16,7 @@ def main(conf: zenoh.Config):
         pub_video = session.declare_publisher("casa/habitacion1/video")
 
         # Inicializar cámara
-        cap = cv2.VideoCapture(2, cv2.CAP_V4L2)  # Para Linux
+        cap = cv2.VideoCapture(0, cv2.CAP_V4L2)  # Para Linux
 
         if not cap.isOpened():
             print("Error: No se pudo abrir la cámara.")
