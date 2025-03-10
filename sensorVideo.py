@@ -9,21 +9,31 @@ def main(conf: zenoh.Config):
     zenoh.init_log_from_env_or("error")
 
     print("Opening session...")
-    with zenoh.open(conf) as session:
+    for i in range(5):  # Prueba los primeros 5 índices de cámara
+        cap = cv2.VideoCapture(i)
+        if cap.isOpened():
+            print(f"Cámara disponible en el índice: {i}")
+            id = i
+            cap.release()
+            break
+        else:
+            # print(f"No se encontró cámara en el índice: {i}")
+            pass
 
-        #print("Declaring Subscriber on 'casa/persona1/caida'...")
-        #print("Declaring Publisher on 'casa/habitacion1/video'...")
+    with zenoh.open(conf) as session:
+        # print("Declaring Subscriber on 'casa/persona1/caida'...")
+        # print("Declaring Publisher on 'casa/habitacion1/video'...")
         pub_video = session.declare_publisher("casa/habitacion1/video")
 
         # Inicializar cámara
-        cap = cv2.VideoCapture(0, cv2.CAP_V4L2)  # Para Linux
+        cap = cv2.VideoCapture(id, cv2.CAP_V4L2)  # Para Linux
 
         if not cap.isOpened():
             print("Error: No se pudo abrir la cámara.")
             return
 
         def listener_caida(sample: zenoh.Sample):
-            #print(f"Received fall detection data on '{sample.key_expr}': {sample.payload.to_string()}")
+            # print(f"Received fall detection data on '{sample.key_expr}': {sample.payload.to_string()}")
 
             # Convertir el dato recibido a entero
             fall_detected = int(sample.payload.to_string())
@@ -60,11 +70,13 @@ if __name__ == "__main__":
     import argparse
     import common
 
-    parser = argparse.ArgumentParser(prog="fall_video_detection", description="Listen for fall detection and send video frames.")
+    parser = argparse.ArgumentParser(
+        prog="fall_video_detection",
+        description="Listen for fall detection and send video frames."
+    )
     common.add_config_arguments(parser)
 
     args = parser.parse_args()
     conf = common.get_config_from_args(args)
 
     main(conf)
-
