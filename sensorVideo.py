@@ -7,7 +7,7 @@ import numpy as np
 def main(conf: zenoh.Config):
     # Configurar sesión de Zenoh
     zenoh.init_log_from_env_or("error")
-
+    id = None
     print("Opening session...")
     for i in range(5):  # Prueba los primeros 5 índices de cámara
         cap = cv2.VideoCapture(i)
