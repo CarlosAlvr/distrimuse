@@ -2,6 +2,7 @@ import time
 import zenoh
 import common
 import argparse
+import os
 
 def detectar_caida(ax, ay, az):
     """
@@ -30,7 +31,7 @@ def main(conf: zenoh.Config):
             caida = detectar_caida(ax, ay, az)
             pub.put(str(caida))
             if caida == 1:
-                print("¡Caída detectada!")
+                os.system("echo ¡Caída detectada!")
         
         session.declare_subscriber("casa/persona1/acelerometro", listener)
         
