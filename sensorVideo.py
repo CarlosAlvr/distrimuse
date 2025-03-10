@@ -10,15 +10,26 @@ def main(conf: zenoh.Config):
     id = None
     print("Opening session...")
     for i in range(5):  # Prueba los primeros 5 índices de cámara
-        cap = cv2.VideoCapture(i)
-        if cap.isOpened():
-            print(f"Cámara disponible en el índice: {i}")
-            id = i
-            cap.release()
-            break
-        else:
-            # print(f"No se encontró cámara en el índice: {i}")
+        try:
+            cap = cv2.VideoCapture(i)
+            if cap.isOpened():
+                print(f"Cámara disponible en el índice: {i}")
+                id = i
+                cap.release()
+                break
+            else:
+                print(f"No se encontró cámara en el índice: {i}")
+        except Exception as e:
+            print(f"Error al intentar abrir la cámara en el índice {i}: {e}")
+            # Continúa con el siguiente índice
             pass
+
+    if id is None:
+        print("No se encontró ninguna cámara disponible.")
+    else:
+        print(f"Usando la cámara en el índice: {id}")
+
+    # Resto del código...
 
     with zenoh.open(conf) as session:
         # print("Declaring Subscriber on 'casa/persona1/caida'...")
