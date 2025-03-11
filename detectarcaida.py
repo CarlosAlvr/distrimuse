@@ -39,7 +39,7 @@ def main(conf: zenoh.Config):
             while True:
                 time.sleep(1)
         except KeyboardInterrupt:
-            print("Saliendo...")
+            os.system("echo Saliendo...")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="detectar_caida", description="Escucha datos del acelerómetro y detecta caídas.")
