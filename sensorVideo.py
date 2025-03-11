@@ -3,75 +3,76 @@ import cv2
 import itertools
 import zenoh
 import numpy as np
+import os
 
 def main(conf: zenoh.Config):
     # Configurar sesión de Zenoh
     zenoh.init_log_from_env_or("error")
     id = None
-    print("Opening session...")
+    os.system("echo Opening session...")
     for i in range(5):  # Prueba los primeros 5 índices de cámara
         try:
             cap = cv2.VideoCapture(i)
             if cap.isOpened():
-                print(f"Cámara disponible en el índice: {i}")
+                os.system(f"echo Cámara disponible en el índice: {i}")
                 id = i
                 cap.release()
                 break
             else:
-                print(f"No se encontró cámara en el índice: {i}")
+                os.system(f"echo No se encontró cámara en el índice: {i}")
         except Exception as e:
-            print(f"Error al intentar abrir la cámara en el índice {i}: {e}")
+            os.system(f"echo Error al intentar abrir la cámara en el índice {i}: {e}")
             # Continúa con el siguiente índice
             pass
 
     if id is None:
-        print("No se encontró ninguna cámara disponible.")
+        os.system("echo No se encontró ninguna cámara disponible.")
     else:
-        print(f"Usando la cámara en el índice: {id}")
+        os.system(f"echo Usando la cámara en el índice: {id}")
 
     # Resto del código...
 
     with zenoh.open(conf) as session:
-        # print("Declaring Subscriber on 'casa/persona1/caida'...")
-        # print("Declaring Publisher on 'casa/habitacion1/video'...")
+        # os.system("Declaring Subscriber on 'casa/persona1/caida'...")
+        # os.system("Declaring Publisher on 'casa/habitacion1/video'...")
         pub_video = session.declare_publisher("casa/habitacion1/video")
 
         # Inicializar cámara
         cap = cv2.VideoCapture(id, cv2.CAP_V4L2)  # Para Linux
 
         if not cap.isOpened():
-            print("Error: No se pudo abrir la cámara.")
+            os.system("echo Error: No se pudo abrir la cámara.")
             return
 
         def listener_caida(sample: zenoh.Sample):
-            # print(f"Received fall detection data on '{sample.key_expr}': {sample.payload.to_string()}")
+            # os.system(f"Received fall detection data on '{sample.key_expr}': {sample.payload.to_string()}")
 
             # Convertir el dato recibido a entero
             fall_detected = int(sample.payload.to_string())
 
             if fall_detected == 1:
-                print("Fall detected. Capturing and sending video frame.")
+                os.system("echo Fall detected. Capturing and sending video frame.")
                 # Capturar un solo frame de la cámara
                 ret, frame = cap.read()
                 if not ret:
-                    print("Error: No se pudo leer el frame de la cámara.")
+                    os.system("echo Error: No se pudo leer el frame de la cámara.")
                     return
 
                 # Procesar y enviar el frame
                 _, buffer = cv2.imencode('.jpg', frame)
                 frame_data = buffer.tobytes()
                 pub_video.put(frame_data)
-                print("Published processed video frame.")
+                os.system("echo Published processed video frame.")
 
         # Declarar el suscriptor
         session.declare_subscriber("casa/persona1/caida", listener_caida)
 
-        print("Listening for fall detection... Press CTRL-C to quit.")
+        os.system("echo Listening for fall detection... Press CTRL-C to quit.")
         try:
             while True:
                 time.sleep(1)  # Mantener el programa en ejecución
         except KeyboardInterrupt:
-            print("Exiting...")
+            os.system("echo Exiting...")
 
         # Liberar recursos
         cap.release()
