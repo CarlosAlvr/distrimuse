@@ -3,7 +3,7 @@ import numpy as np
 import zenoh
 import common
 import argparse
-
+import os
 def generar_aceleracion():
     """
     Genera datos simulados de aceleración en los ejes X, Y, Z.
@@ -20,17 +20,17 @@ def main(conf: zenoh.Config):
     zenoh.init_log_from_env_or("error")
     with zenoh.open(conf) as session:
         pub = session.declare_publisher("casa/persona1/acelerometro")
-        print("Publicando datos de acelerómetro cada segundo...")
+        os.system("echo Publicando datos de acelerómetro cada segundo...")
         
         try:
             while True:
                 ax, ay, az = generar_aceleracion()
                 data = f"{{'ax': {ax:.2f}, 'ay': {ay:.2f}, 'az': {az:.2f}}}"
                 pub.put(data)
-                print(f"Publicado: {data}")
+                os.system(f"echo Publicado: {data}")
                 time.sleep(1)
         except KeyboardInterrupt:
-            print("Saliendo...")
+            os.system("echo Saliendo...")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="simulador_acelerometro", description="Publica datos simulados de acelerómetro.")
