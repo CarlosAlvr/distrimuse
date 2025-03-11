@@ -2,6 +2,7 @@ import time
 import cv2
 import numpy as np
 import zenoh
+import os
 
 def load_yolo_model():
     # Carga los pesos y configuraciones de YOLO
@@ -57,7 +58,7 @@ def main(conf: zenoh.Config, key: str):
     # Configurar sesión de Zenoh
     zenoh.init_log_from_env_or("error")
 
-    #print("Opening session...")
+    #os.system("Opening session...")
     with zenoh.open(conf) as session:
 
         #print(f"Declaring Subscriber on '{key}'...")
@@ -78,11 +79,11 @@ def main(conf: zenoh.Config, key: str):
 
                 # Publicar 1 si se detecta alguien, 0 en caso contrario
                 pub.put("1" if detected else "0")
-                print(f"Published: {'1' if detected else '0'}")
+                os.system(f"echo Published: {'1' if detected else '0'}")
 
         session.declare_subscriber(key, listener)
 
-        print("Press CTRL-C to quit...")
+        os.system("echo Press CTRL-C to quit...")
         while True:
             time.sleep(1)
 
