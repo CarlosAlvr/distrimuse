@@ -8,37 +8,14 @@ import os
 def main(conf: zenoh.Config):
     # Configurar sesión de Zenoh
     zenoh.init_log_from_env_or("error")
-    id = None
     os.system("echo Opening session...")
-    for i in range(5):  # Prueba los primeros 5 índices de cámara
-        try:
-            cap = cv2.VideoCapture(i)
-            if cap.isOpened():
-                os.system(f"echo Cámara disponible en el índice: {i}")
-                id = i
-                cap.release()
-                break
-            else:
-                os.system(f"echo No se encontró cámara en el índice: {i}")
-        except Exception as e:
-            os.system(f"echo Error al intentar abrir la cámara en el índice {i}: {e}")
-            # Continúa con el siguiente índice
-            pass
-
-    if id is None:
-        os.system("echo No se encontró ninguna cámara disponible.")
-    else:
-        os.system(f"echo Usando la cámara en el índice: {id}")
-
-    # Resto del código...
-
     with zenoh.open(conf) as session:
         # os.system("Declaring Subscriber on 'casa/persona1/caida'...")
         # os.system("Declaring Publisher on 'casa/habitacion1/video'...")
         pub_video = session.declare_publisher("casa/habitacion1/video")
 
         # Inicializar cámara
-        cap = cv2.VideoCapture(0, cv2.CAP_V4L2)  # Para Linux
+        cap = cv2.VideoCapture(0)  # Para Linux
 
         if not cap.isOpened():
             os.system("echo Error: No se pudo abrir la cámara.")
