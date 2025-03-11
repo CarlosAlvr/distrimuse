@@ -5,6 +5,7 @@ import zenoh
 import flet as ft
 from datetime import datetime
 import pytz
+import os
 
 def flet_app(page: ft.Page, conf: zenoh.Config, key: str):
     # Configuración de la UI en Flet
@@ -23,7 +24,7 @@ def flet_app(page: ft.Page, conf: zenoh.Config, key: str):
     
     def listener(sample: zenoh.Sample):
         topic = sample.key_expr
-        print(f"{topic}")
+        os.system(f"echo {topic}")
         
         
         
@@ -35,7 +36,7 @@ def flet_app(page: ft.Page, conf: zenoh.Config, key: str):
         
         # Formatear el mensaje de alerta
         message = f"Hemos detectado un caído en la {topic} a la hora {hora_actual}"
-        print(message)
+        os.system(f"echo {message}")     
         
         # Almacenar los últimos 10 mensajes
         if len(alert_messages) >= max_messages:
@@ -52,7 +53,7 @@ def flet_app(page: ft.Page, conf: zenoh.Config, key: str):
             time.sleep(1)
     except KeyboardInterrupt:
         session.close()
-        print("Zenoh session closed.")
+        os.system("echo Zenoh session closed.")
 
 def main():
     parser = argparse.ArgumentParser(description="Zenoh alert subscriber")
