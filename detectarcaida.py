@@ -27,7 +27,7 @@ def main(conf: zenoh.Config):
 
     zenoh.init_log_from_env_or("error")
     with zenoh.open(conf) as session:
-        pub = session.declare_publisher("{env_output}")
+        pub = session.declare_publisher(env_output)
 
         def listener(sample: zenoh.Sample):
             data = eval(sample.payload.to_string())
@@ -37,7 +37,7 @@ def main(conf: zenoh.Config):
             if caida == 1:
                 os.system("echo ¡Caída detectada!")
         
-        session.declare_subscriber("{env_input}", listener)
+        session.declare_subscriber(env_input, listener)
         
         try:
             while True:
