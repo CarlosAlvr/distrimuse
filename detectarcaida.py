@@ -18,13 +18,17 @@ def detectar_caida(ax, ay, az):
     return 0
 
 def main(conf: zenoh.Config):
-    """
-    Escucha datos de acelerómetro y publica detección de caídas.
-    """
+     env_input = os.getenv("Distrimuse_input_0")
+         if env_input is None:
+            os.system("Error: La variable de entorno 'Distrimuse_input_0' no está definida.")
+      env_output = os.getenv("Distrimuse_output_0")
+         if env_output is None:
+            os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
+
     zenoh.init_log_from_env_or("error")
     with zenoh.open(conf) as session:
-        pub = session.declare_publisher("casa/persona1/caida")
-        
+        pub = session.declare_publisher("{env_output}")
+
         def listener(sample: zenoh.Sample):
             data = eval(sample.payload.to_string())
             ax, ay, az = data['ax'], data['ay'], data['az']
@@ -33,7 +37,7 @@ def main(conf: zenoh.Config):
             if caida == 1:
                 os.system("echo ¡Caída detectada!")
         
-        session.declare_subscriber("casa/persona1/acelerometro", listener)
+        session.declare_subscriber("{env_input}", listener)
         
         try:
             while True:
