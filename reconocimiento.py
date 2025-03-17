@@ -60,10 +60,16 @@ def main(conf: zenoh.Config, key: str):
 
     #os.system("Opening session...")
     with zenoh.open(conf) as session:
-
+        env_input = os.getenv("Distrimuse_input_0")
+            if env_input is None:
+                os.system("Error: La variable de entorno 'Distrimuse_input_0' no está definida.")
+        env_output = os.getenv("Distrimuse_output_0")
+            if env_output is None:
+                os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
         #print(f"Declaring Subscriber on '{key}'...")
         #print("Declaring Publisher on 'casa/habitacion1/deteccion'...")
-        pub = session.declare_publisher("casa/habitacion1/deteccion")
+        #pub = session.declare_publisher("casa/habitacion1/deteccion")
+         pub = session.declare_publisher(env_output)
 
         def listener(sample: zenoh.Sample):
             #print(f">> [Subscriber] Received data on '{sample.key_expr}'")
@@ -81,7 +87,7 @@ def main(conf: zenoh.Config, key: str):
                 pub.put("1" if detected else "0")
                 os.system(f"echo Published: {'1' if detected else '0'}")
 
-        session.declare_subscriber(key, listener)
+        session.declare_subscriber(env_input, listener)
 
         os.system("echo Press CTRL-C to quit...")
         while True:
