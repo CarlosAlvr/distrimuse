@@ -84,12 +84,18 @@ def main(conf: zenoh.Config):
 
 
     with zenoh.open(conf) as session:
-
+        env_input = os.getenv("Distrimuse_input_0")
+            if env_input is None:
+                os.system("Error: La variable de entorno 'Distrimuse_input_0' no está definida.")
+        env_output = os.getenv("Distrimuse_output_0")
+            if env_output is None:
+                os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
         # print("Declaring Subscriber on 'casa/persona1/caida'...")
 
         # print("Declaring Publisher on 'casa/habitacion1/video'...")
 
-        pub_video = session.declare_publisher("casa/habitacion1/video")
+        #pub_video = session.declare_publisher("casa/habitacion1/video")
+        pub_video = session.declare_publisher(env_output)
 
 
 
@@ -149,7 +155,7 @@ def main(conf: zenoh.Config):
 
         # Declarar el suscriptor
 
-        session.declare_subscriber("casa/persona1/caida", listener_caida)
+        session.declare_subscriber(env_input, listener_caida)
 
 
 
