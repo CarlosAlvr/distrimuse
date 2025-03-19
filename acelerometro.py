@@ -16,11 +16,11 @@ def generar_aceleracion():
 def main(conf: zenoh.Config):
     zenoh.init_log_from_env_or("error")
     with zenoh.open(conf) as session:
-        env_input = os.environ.get('DISTRIMUSE_INPUT_0')
-        if env_input is None:
-            os.system("Error: La variable de entorno 'Distrimuse_input_0' no está definida.")
-        os.system(f"Input: {env_input}")
-        pub = session.declare_publisher(env_input)
+        env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
+        if env_output is None:
+            os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
+        os.system(f"Input: {env_output}")
+        pub = session.declare_publisher(env_output)
         os.system("echo Publicando datos de acelerómetro cada segundo...")
         
         try:
