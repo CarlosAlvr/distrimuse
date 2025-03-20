@@ -60,10 +60,10 @@ def main(conf: zenoh.Config, key: str):
 
     #os.system("Opening session...")
     with zenoh.open(conf) as session:
-        env_input = os.getenv('DISTRIMUSE_INPUT_0')
+        env_input = os.environ.get('DISTRIMUSE_INPUT_0')
             if env_input is None:
                 os.system("Error: La variable de entorno 'Distrimuse_input_0' no está definida.")
-        env_output = os.getenv('DISTRIMUSE_OUTPUT_0')
+        env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
             if env_output is None:
                 os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
         #print(f"Declaring Subscriber on '{key}'...")
