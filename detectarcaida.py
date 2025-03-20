@@ -41,8 +41,9 @@ def main(conf: zenoh.Config):
             def listener(sample: zenoh.Sample):
                 try:
                     # Usamos eval en lugar de json.loads para interpretar el mensaje
-                    data = eval(sample.payload.to_string())
+                    data = json.loads(sample.payload.to_string())
                     ax, ay, az = data['ax'], data['ay'], data['az']
+                    print(f"{data},{ax},{ay},{az}")
                     caida = detectar_caida(ax, ay, az)
                     pub.put(str(caida))
                     if caida == 1:
