@@ -4,6 +4,8 @@ import zenoh
 import common
 import argparse
 import os
+import json
+
 def generar_aceleracion():
     """
     Genera datos simulados de aceleración en los ejes X, Y, Z.
@@ -26,7 +28,8 @@ def main(conf: zenoh.Config):
         try:
             while True:
                 ax, ay, az = generar_aceleracion()
-                data = f"{{'ax': {ax:.2f}, 'ay': {ay:.2f}, 'az': {az:.2f}}}"
+                
+                data = json.dumps({'ax': round(ax, 2), 'ay': round(ay, 2), 'az': round(az, 2)})
                 pub.put(data)
                 os.system(f"echo Publicado: {data}")
                 time.sleep(1)
