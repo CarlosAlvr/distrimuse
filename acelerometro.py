@@ -19,7 +19,7 @@ def main(conf: zenoh.Config):
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
             os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
-        os.system(f"Input: {env_output}")
+        print(f"Input: {env_output}")
         pub = session.declare_publisher(env_output)
         os.system("echo Publicando datos de acelerómetro cada segundo...")
         
