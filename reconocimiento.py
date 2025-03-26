@@ -66,14 +66,10 @@ def main(conf: zenoh.Config, key: str):
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
             os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
-        #print(f"Declaring Subscriber on '{key}'...")
-        #print("Declaring Publisher on 'casa/habitacion1/deteccion'...")
-        #pub = session.declare_publisher("casa/habitacion1/deteccion")
-         pub = session.declare_publisher(env_output)
+        # Declarar publisher utilizando la variable de entorno
+        pub = session.declare_publisher(env_output)
 
         def listener(sample: zenoh.Sample):
-            #print(f">> [Subscriber] Received data on '{sample.key_expr}'")
-
             # Decodificar frame recibido (asumiendo que es JPG)
             frame_data = sample.payload.to_bytes()
             np_arr = np.frombuffer(frame_data, dtype=np.uint8)
@@ -82,7 +78,6 @@ def main(conf: zenoh.Config, key: str):
             if frame is not None:
                 # Detectar personas en el frame
                 detected = detect_people(frame, net, output_layers, classes)
-
                 # Publicar 1 si se detecta alguien, 0 en caso contrario
                 pub.put("1" if detected else "0")
                 os.system(f"echo Published: {'1' if detected else '0'}")
@@ -98,7 +93,10 @@ if __name__ == "__main__":
     import argparse
     import common
 
-    parser = argparse.ArgumentParser(prog="Recognice_fall", description="Detect people in frames and publish detection status.")
+    parser = argparse.ArgumentParser(
+        prog="Recognice_fall", 
+        description="Detect people in frames and publish detection status."
+    )
     common.add_config_arguments(parser)
     parser.add_argument(
         "--key",
