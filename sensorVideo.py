@@ -38,4 +38,56 @@ def main(conf: zenoh.Config):
             os.system("Error: La variable de entorno 'Distrimuse_input_0' no está definida.")
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
-            os
+            os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
+
+        # Declarar publisher utilizando la variable de entorno
+        pub_video = session.declare_publisher(env_output)
+        
+        # Inicializar cámara
+        cap = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)  # Para Linux
+
+        if not cap.isOpened():
+            print("Error: No se pudo abrir la cámara.")
+            return
+
+        def listener_caida(sample: zenoh.Sample):
+            # Convertir el dato recibido a entero
+            fall_detected = int(sample.payload.to_string())
+            if fall_detected == 1:
+                print("Fall detected. Capturing and sending video frame.")
+                # Capturar un solo frame de la cámara
+                ret, frame = cap.read()
+                if not ret:
+                    print("Error: No se pudo leer el frame de la cámara.")
+                    return
+                # Procesar y enviar el frame
+                _, buffer = cv2.imencode('.jpg', frame)
+                frame_data = buffer.tobytes()
+                pub_video.put(frame_data)
+                print("Published processed video frame.")
+
+        # Declarar el suscriptor
+        session.declare_subscriber(env_input, listener_caida)
+        print("Listening for fall detection... Press CTRL-C to quit.")
+        try:
+            while True:
+                time.sleep(1)  # Mantener el programa en ejecución
+        except KeyboardInterrupt:
+            print("Exiting...")
+        # Liberar recursos
+        cap.release()
+
+# --- Command line argument parsing --- --- --- --- --- ---
+if __name__ == "__main__":
+    import argparse
+    import common
+
+    parser = argparse.ArgumentParser(
+        prog="fall_video_detection",
+        description="Listen for fall detection and send video frames."
+    )
+    common.add_config_arguments(parser)
+    args = parser.parse_args()
+    conf = common.get_config_from_args(args)
+
+    main(conf)
