@@ -15,30 +15,30 @@ def main(conf: zenoh.Config):
         try:
             cap = cv2.VideoCapture(i)
             if cap.isOpened():
-                print(f"Cámara disponible en el índice: {i}")
+                print(f"Camera available in the index: {i}")
                 camera_id = i
                 cap.release()
                 break
             else:
-                print(f"No se encontró cámara en el índice: {i}")
+                print(f"No camera found in the index: {i}")
         except Exception as e:
-            print(f"Error al intentar abrir la cámara en el índice {i}: {e}")
+            print(f"Error trying to open the camera in the index {i}: {e}")
             # Continúa con el siguiente índice
             pass
 
     if camera_id is None:
-        print("No se encontró ninguna cámara disponible.")
+        print("No cameras available.")
     else:
-        print(f"Usando la cámara en el índice: {camera_id}")
+        print(f"Using the camera on the index finger: {camera_id}")
     
     # Resto del código...
     with zenoh.open(conf) as session:
         env_input = os.environ.get('DISTRIMUSE_INPUT_0')
         if env_input is None:
-            os.system("Error: La variable de entorno 'Distrimuse_input_0' no está definida.")
+            os.system("Error: The environment variable 'Distrimuse_input_0' is not defined.")
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
-            os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
+            os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
 
         # Declarar publisher utilizando la variable de entorno
         pub_video = session.declare_publisher(env_output)
@@ -47,7 +47,7 @@ def main(conf: zenoh.Config):
         cap = cv2.VideoCapture(camera_id, cv2.CAP_V4L2)  # Para Linux
 
         if not cap.isOpened():
-            print("Error: No se pudo abrir la cámara.")
+            print("Error: Could not open camera.")
             return
 
         def listener_caida(sample: zenoh.Sample):
@@ -58,7 +58,7 @@ def main(conf: zenoh.Config):
                 # Capturar un solo frame de la cámara
                 ret, frame = cap.read()
                 if not ret:
-                    print("Error: No se pudo leer el frame de la cámara.")
+                    print("Error: Could not read frame from camera.")
                     return
                 # Procesar y enviar el frame
                 _, buffer = cv2.imencode('.jpg', frame)
