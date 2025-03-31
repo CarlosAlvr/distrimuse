@@ -7,9 +7,7 @@ import os
 import json
 
 def generar_aceleracion():
-    """
-    Genera datos simulados de aceleración en los ejes X, Y, Z.
-    """
+ 
     ax = np.sin(time.time()) + np.random.uniform(-4, 4)
     ay = np.cos(time.time()) + np.random.uniform(-4, 4)
     az = 9.8 + np.random.uniform(-3, 3)  # Simula la gravedad en el eje Z
@@ -20,10 +18,10 @@ def main(conf: zenoh.Config):
     with zenoh.open(conf) as session:
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
-            os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
+            os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
         print(f"Input: {env_output}")
         pub = session.declare_publisher(env_output)
-        os.system("echo Publicando datos de acelerómetro cada segundo...")
+        os.system("echo Publishing accelerometer data every second...")
         
         try:
             while True:
@@ -31,13 +29,13 @@ def main(conf: zenoh.Config):
                 
                 data = json.dumps({'ax': round(ax, 2), 'ay': round(ay, 2), 'az': round(az, 2)})
                 pub.put(data)
-                os.system(f"echo Publicado: {data}")
+                os.system(f"echo Published: {data}")
                 time.sleep(1)
         except KeyboardInterrupt:
-            os.system("echo Saliendo...")
+            os.system("echo Exited...")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog="simulador_acelerometro", description="Publica datos simulados de acelerómetro.")
+    parser = argparse.ArgumentParser(prog="simulador_acelerometro", description="Publishes simulated accelerometer data.")
     common.add_config_arguments(parser)
     args = parser.parse_args()
     conf = common.get_config_from_args(args)
