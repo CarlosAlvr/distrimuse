@@ -56,7 +56,7 @@ def main(conf: zenoh.Config):
                 time.sleep(1)
 
     except KeyboardInterrupt:
-        print("Exited...")
+        print("Exiting...")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
