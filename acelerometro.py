@@ -6,7 +6,7 @@ import argparse
 import os
 import json
 
-def generar_aceleracion():
+def acceleration():
     # This is the simulator of an accelerometer 
     ax = np.sin(time.time()) + np.random.uniform(-4, 4)
     ay = np.cos(time.time()) + np.random.uniform(-4, 4)
@@ -25,7 +25,7 @@ def main(conf: zenoh.Config):
         
         try:
             while True:
-                ax, ay, az = generar_aceleracion()
+                ax, ay, az = acceleration()
                 data = json.dumps({'ax': round(ax, 2), 'ay': round(ay, 2), 'az': round(az, 2)})
                 pub.put(data)
                 os.system(f"echo Published: {data}")
