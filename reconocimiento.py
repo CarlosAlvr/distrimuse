@@ -62,10 +62,10 @@ def main(conf: zenoh.Config, key: str):
     with zenoh.open(conf) as session:
         env_input = os.environ.get('DISTRIMUSE_INPUT_0')
         if env_input is None:
-            os.system("Error: La variable de entorno 'Distrimuse_input_0' no está definida.")
+            os.system("Error: The environment variable 'Distrimuse_input_0' is not defined.")
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
-            os.system("Error: La variable de entorno 'Distrimuse_output_0' no está definida.")
+            os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
         # Declarar publisher utilizando la variable de entorno
         pub = session.declare_publisher(env_output)
 
