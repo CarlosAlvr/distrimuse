@@ -13,13 +13,13 @@ def acceleration():
     az = 9.8 + np.random.uniform(-3, 3)  # Simulates gravity 
     return ax, ay, az
 
-def main(conf: zenoh.Config):
+def main(conf):
     zenoh.init_log_from_env_or("error")
     with zenoh.open(conf) as session:
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
             os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
-        print(f"Input: {env_output}")
+        os.system(f"Input: {env_output}")
         pub = session.declare_publisher(env_output)
         os.system("echo Publishing accelerometer data every second...")
         
@@ -35,7 +35,7 @@ def main(conf: zenoh.Config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="simulador_acelerometro", description="Publishes simulated accelerometer data.")
-    common.add_config_arguments(parser)
-    args = parser.parse_args()
-    conf = common.get_config_from_args(args)
+    zenoh_config= os.environ.get('DISTRIMUSE_CONFIG')
+    os.system(zenoh_config)
+    conf = zenoh.Config.from_json5(zenoh_config_json)
     main(conf)
