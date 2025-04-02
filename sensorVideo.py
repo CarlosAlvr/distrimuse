@@ -86,8 +86,7 @@ if __name__ == "__main__":
         prog="fall_video_detection",
         description="Listen for fall detection and send video frames."
     )
-    common.add_config_arguments(parser)
-    args = parser.parse_args()
-    conf = common.get_config_from_args(args)
-
+    zenoh_config= os.environ.get('DISTRIMUSE_CONFIG')
+    print(zenoh_config)
+    conf = zenoh.Config.from_json5(zenoh_config)
     main(conf)
