@@ -37,5 +37,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="simulador_acelerometro", description="Publishes simulated accelerometer data.")
     zenoh_config= os.environ.get('DISTRIMUSE_CONFIG')
     os.system(zenoh_config)
-    conf = zenoh.Config.from_json5(zenoh_config_json)
+    conf = zenoh.Config.from_json5(zenoh_config)
     main(conf)
