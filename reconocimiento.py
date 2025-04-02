@@ -51,7 +51,7 @@ def detect_people(frame, net, output_layers, classes):
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
     return len(indexes) > 0 if len(indexes) > 0 else False
 
-def main(conf: zenoh.Config, key: str):
+def main(conf, key: str):
     # Cargar modelo YOLO
     net, output_layers, classes = load_yolo_model()
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
         help="The key expression to subscribe to.",
     )
 
-    args = parser.parse_args()
-    conf = common.get_config_from_args(args)
-
+    zenoh_config= os.environ.get('DISTRIMUSE_CONFIG')
+    print(zenoh_config)
+    conf = zenoh.Config.from_json5(zenoh_config_json)
     main(conf, args.key)
