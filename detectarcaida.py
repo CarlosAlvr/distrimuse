@@ -12,7 +12,7 @@ def detectar_caida(ax, ay, az):
     aceleracion_total = (ax**2 + ay**2 + az**2) ** 0.5
     return 1 if aceleracion_total < umbral_min or aceleracion_total > umbral_max else 0
 
-def main(conf: zenoh.Config):
+def main(conf):
     env_input = os.environ.get('DISTRIMUSE_INPUT_0')
     if env_input is None:
         print("Error: The environment variable 'DISTRIMUSE_INPUT_0' is not defined.")
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         prog="detectar_caida",
         description="Listen to accelerometer data and detect falls."
     )
-    common.add_config_arguments(parser)
-    args = parser.parse_args()
-    conf = common.get_config_from_args(args)
+    zenoh_config= os.environ.get('DISTRIMUSE_CONFIG')
+    print(zenoh_config)
+    conf = zenoh.Config.from_json5(zenoh_config_json)
     main(conf)
