@@ -66,7 +66,8 @@ def main(conf, key: str):
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
             os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
-      
+            
+        print(f"The defined inputs -> outputs are: {env_input} -> {env_output}")
         pub = session.declare_publisher(env_output)
 
         def listener(sample: zenoh.Sample):
