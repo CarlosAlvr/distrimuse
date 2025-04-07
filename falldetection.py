@@ -47,10 +47,10 @@ def main(conf):
                     if fall == 1:
                         print("echo ¡A fall has been detected, sending data to video_sensor!")
                 except Exception as e:
-                    print(f"Error processing message: {e}")
+                    print(f"echo Error processing message: {e}")
 
             session.declare_subscriber(env_input, listener)
-            print("The subscriber has been declared.")
+            print("echo The subscriber has been declared.")
 
             while True:
                 time.sleep(1)
