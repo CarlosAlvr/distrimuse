@@ -15,26 +15,26 @@ def fall_detection(ax, ay, az):
 def main(conf):
     env_input = os.environ.get('DISTRIMUSE_INPUT_0')
     if env_input is None:
-        print("echo Error: The environment variable 'DISTRIMUSE_INPUT_0' is not defined.")
+        print("Error: The environment variable 'DISTRIMUSE_INPUT_0' is not defined.")
         return
 
     env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
     if env_output is None:
-        print("echo Error: The environment variable 'DISTRIMUSE_OUTPUT_0' is not defined.")
+        print("Error: The environment variable 'DISTRIMUSE_OUTPUT_0' is not defined.")
         return
 
-    print(f"echo The defined inputs -> outputs are: {env_input} -> {env_output}")
+    print(f"The defined inputs -> outputs are: {env_input} -> {env_output}")
 
     # Inicializar el log de Zenoh
     zenoh.init_log_from_env_or("error")
 
     try:
         with zenoh.open(conf) as session:
-            print("echo Zenoh session started.")
+            print("Zenoh session started.")
 
             # Declarar publisher y subscriber usando las variables de entorno
             pub = session.declare_publisher(env_output)
-            print("echo The publisher has been declared.")
+            print("The publisher has been declared.")
 
             def listener(sample: zenoh.Sample):
                 try:
@@ -45,12 +45,12 @@ def main(conf):
                     fall = fall_detection(ax, ay, az)
                     pub.put(str(fall))
                     if fall == 1:
-                        print("echo ¡A fall has been detected, sending data to video_sensor!")
+                        print("¡A fall has been detected, sending data to video_sensor!")
                 except Exception as e:
-                    print(f"echo Error processing message: {e}")
+                    print(f"Error processing message: {e}")
 
             session.declare_subscriber(env_input, listener)
-            print("echo The subscriber has been declared.")
+            print("The subscriber has been declared.")
 
             while True:
                 time.sleep(1)
