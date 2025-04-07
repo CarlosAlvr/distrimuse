@@ -5,14 +5,14 @@ import zenoh
 import os
 
 def load_yolo_model():
-    # Carga los pesos y configuraciones de YOLO
+    
     net = cv2.dnn.readNet("yolov4.weights", "yolov4.cfg")
     layer_names = net.getLayerNames()
 
-    # Manejar correctamente getUnconnectedOutLayers
+   
     output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers().flatten()]
 
-    # Cargar las clases (COCO dataset)
+    
     with open("coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
 
@@ -21,7 +21,7 @@ def load_yolo_model():
 def detect_people(frame, net, output_layers, classes):
     height, width, _ = frame.shape
 
-    # Crear un blob para YOLO
+    
     blob = cv2.dnn.blobFromImage(frame, 0.00392, (1280, 1280), (0, 0, 0), True, crop=False)
     net.setInput(blob)
     outs = net.forward(output_layers)
@@ -34,7 +34,7 @@ def detect_people(frame, net, output_layers, classes):
             class_id = np.argmax(scores)
             confidence = scores[class_id]
 
-            # Filtrar detecciones de personas (clase 'person')
+           
             if classes[class_id] == "person" and confidence > 0.5:
                 center_x = int(detection[0] * width)
                 center_y = int(detection[1] * height)
@@ -52,13 +52,13 @@ def detect_people(frame, net, output_layers, classes):
     return len(indexes) > 0 if len(indexes) > 0 else False
 
 def main(conf, key: str):
-    # Cargar modelo YOLO
+    
     net, output_layers, classes = load_yolo_model()
 
-    # Configurar sesión de Zenoh
+  
     zenoh.init_log_from_env_or("error")
 
-    #os.system("Opening session...")
+ 
     with zenoh.open(conf) as session:
         env_input = os.environ.get('DISTRIMUSE_INPUT_0')
         if env_input is None:
@@ -66,21 +66,21 @@ def main(conf, key: str):
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
             os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
-        # Declarar publisher utilizando la variable de entorno
+      
         pub = session.declare_publisher(env_output)
 
         def listener(sample: zenoh.Sample):
-            # Decodificar frame recibido (asumiendo que es JPG)
+        
             frame_data = sample.payload.to_bytes()
             np_arr = np.frombuffer(frame_data, dtype=np.uint8)
             frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
             if frame is not None:
-                # Detectar personas en el frame
+       
                 detected = detect_people(frame, net, output_layers, classes)
-                # Publicar 1 si se detecta alguien, 0 en caso contrario
-                pub.put("1" if detected else "0")
-                os.system(f"echo Published: {'1' if detected else '0'}")
+                if detected: 
+                    pub.put("1")
+                    os.system(f"A person has been detected")
 
         session.declare_subscriber(env_input, listener)
 
