@@ -45,7 +45,7 @@ def main(conf):
                     fall = fall_detection(ax, ay, az)
                     pub.put(str(fall))
                     if fall == 1:
-                        print("echo ¡A fall has been detected, sending data to recognision!")
+                        print("echo ¡A fall has been detected, sending data to video_sensor!")
                 except Exception as e:
                     print(f"Error processing message: {e}")
 
