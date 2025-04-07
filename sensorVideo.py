@@ -6,39 +6,39 @@ import numpy as np
 import os
 
 def main(conf: zenoh.Config):
-    # Configurar sesión de Zenoh
+    # Zenoh sesion configured
     zenoh.init_log_from_env_or("error")
     camera_id = None
     print("Opening session...")
 
-    for i in range(5):  # Prueba los primeros 5 índices de cámara
+    for i in range(5):  # Trys the first 5 videos searching for a camera
         try:
             cap = cv2.VideoCapture(i)
             if cap.isOpened():
-                print(f"Camera available in the index: {i}")
+                print(f"echo Camera available in the index: {i}")
                 camera_id = i
                 cap.release()
                 break
             else:
-                print(f"No camera found in the index: {i}")
+                print(f"echo No camera found in the index: {i}")
         except Exception as e:
-            print(f"Error trying to open the camera in the index {i}: {e}")
-            # Continúa con el siguiente índice
+            print(f"echo Error trying to open the camera in the index {i}: {e}")
+            # Continues with the next one
             pass
 
     if camera_id is None:
-        print("No cameras available.")
+        print("echo No cameras available.")
     else:
-        print(f"Using the camera on the index finger: {camera_id}")
+        print(f"echo Using the camera on the index finger: {camera_id}")
     
-    # Resto del código...
+
     with zenoh.open(conf) as session:
         env_input = os.environ.get('DISTRIMUSE_INPUT_0')
         if env_input is None:
-            os.system("Error: The environment variable 'Distrimuse_input_0' is not defined.")
+            os.system("echo Error: The environment variable 'Distrimuse_input_0' is not defined.")
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
-            os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
+            os.system("echo Error: The environment variable 'Distrimuse_output_0' is not defined.")
 
         # Declarar publisher utilizando la variable de entorno
         pub_video = session.declare_publisher(env_output)
