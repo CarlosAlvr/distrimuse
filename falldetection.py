@@ -41,11 +41,10 @@ def main(conf):
                     # Usamos eval en lugar de json.loads para interpretar el mensaje
                     data = json.loads(sample.payload.to_string())
                     ax, ay, az = data['ax'], data['ay'], data['az']
-                    print(f"{data},{ax},{ay},{az}")
                     fall = fall_detection(ax, ay, az)
                     pub.put(str(fall))
                     if fall == 1:
-                        print("¡A fall has been detected, sending data to video_sensor!")
+                        print(f"¡A fall has been detected, sending data to video_sensor! on {env_output}")
                 except Exception as e:
                     print(f"Error processing message: {e}")
 
