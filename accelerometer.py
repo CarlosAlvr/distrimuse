@@ -19,7 +19,7 @@ def main(conf):
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
             os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
-        os.system(f"The input variable is: {env_output}")
+
         pub = session.declare_publisher(env_output)
         os.system("Publishing accelerometer data every second...")
         
@@ -28,7 +28,7 @@ def main(conf):
                 ax, ay, az = acceleration()
                 data = json.dumps({'X axis': round(ax, 2), 'Y axis': round(ay, 2), 'Z axis': round(az, 2)})
                 pub.put(data)
-                os.system(f"The data pubished is: {data}")
+                os.system(f"Published: {data} in {env_output}")
                 time.sleep(1)
         except KeyboardInterrupt:
             os.system("The app is closing...")
