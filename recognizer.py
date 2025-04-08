@@ -81,7 +81,7 @@ def main(conf, key: str):
                 detected = detect_people(frame, net, output_layers, classes)
                 if detected: 
                     pub.put("1")
-                    os.system(f"A person has been detected")
+                    os.system("A person has been detected")
 
         session.declare_subscriber(env_input, listener)
 
