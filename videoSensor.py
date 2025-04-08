@@ -55,7 +55,7 @@ def main(conf: zenoh.Config):
             
             fall_detected = int(sample.payload.to_string())
             if fall_detected == 1:
-                print("A fall has been detected. Capturing and sending a video frame.")
+                print(f"A fall has been detected. Capturing and sending a video frame to {env_output}")
                 
                 ret, frame = cap.read()
                 if not ret:
