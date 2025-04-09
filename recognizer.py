@@ -51,7 +51,7 @@ def detect_people(frame, net, output_layers, classes):
     indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
     return len(indexes) > 0 if len(indexes) > 0 else False
 
-def main(conf, key: str):
+def main(conf):
     
     net, output_layers, classes = load_yolo_model()
 
@@ -98,17 +98,8 @@ if __name__ == "__main__":
         prog="Recognice_fall", 
         description="Detect people in frames and publish detection status."
     )
-    common.add_config_arguments(parser)
-    parser.add_argument(
-        "--key",
-        "-k",
-        dest="key",
-        default="casa/habitacion1/video",
-        type=str,
-        help="The key expression to subscribe to.",
-    )
-
+   
     zenoh_config= os.environ.get('DISTRIMUSE_CONFIG')
     print(zenoh_config)
     conf = zenoh.Config.from_json5(zenoh_config)
-    main(conf, args.key)
+    main(conf, )
