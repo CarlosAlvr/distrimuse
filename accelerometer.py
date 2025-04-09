@@ -19,7 +19,7 @@ def main(conf):
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
             os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
-
+        os.system(f"The input variable is: {env_output}")
         pub = session.declare_publisher(env_output)
         os.system("Publishing accelerometer data every second...")
         
