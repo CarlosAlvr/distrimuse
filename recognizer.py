@@ -102,4 +102,4 @@ if __name__ == "__main__":
     zenoh_config= os.environ.get('DISTRIMUSE_CONFIG')
     print(zenoh_config)
     conf = zenoh.Config.from_json5(zenoh_config)
-    main(conf, )
+    main(conf)
