@@ -62,10 +62,10 @@ def main(conf):
     with zenoh.open(conf) as session:
         env_input = os.environ.get('DISTRIMUSE_INPUT_0')
         if env_input is None:
-            os.system("Error: The environment variable 'Distrimuse_input_0' is not defined.")
+            os.system("echo Error: The environment variable 'Distrimuse_input_0' is not defined.")
         env_output = os.environ.get('DISTRIMUSE_OUTPUT_0')
         if env_output is None:
-            os.system("Error: The environment variable 'Distrimuse_output_0' is not defined.")
+            os.system("echo Error: The environment variable 'Distrimuse_output_0' is not defined.")
             
         print(f"The defined inputs -> outputs are: {env_input} -> {env_output}")
         pub = session.declare_publisher(env_output)
@@ -81,7 +81,7 @@ def main(conf):
                 detected = detect_people(frame, net, output_layers, classes)
                 if detected: 
                     pub.put("1")
-                    os.system("A person has been detected")
+                    os.system("echo A person has been detected")
 
         session.declare_subscriber(env_input, listener)
 
