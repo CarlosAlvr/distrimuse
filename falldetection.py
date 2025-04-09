@@ -10,7 +10,7 @@ def fall_detection(ax, ay, az):
     umbral_min = 3.0  # Umbral mínimo de aceleración brusca indicando caída libre
     umbral_max = 12.0 # Umbral máximo que puede indicar un impacto
     total_acceleration = (ax**2 + ay**2 + az**2) ** 0.5
-    return 1 if aceleracion_total < umbral_min or aceleracion_total > umbral_max else 0
+    return 1 if total_acceleration < umbral_min or total_acceleration > umbral_max else 0
 
 def main(conf):
     env_input = os.environ.get('DISTRIMUSE_INPUT_0')
